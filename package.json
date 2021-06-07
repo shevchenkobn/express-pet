@@ -1,0 +1,66 @@
+{
+  "name": "express-pet",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "^16.3.0"
+  },
+  "bin": {
+    "expe": "./build/bin/www.js"
+  },
+  "scripts": {
+    "start": "node ./build/bin/www",
+    "start:b": "npm run build && npm run start",
+    "start:dev": "ts-node-dev --inspect=9229 -- ./src/bin/www.ts",
+    "start:brk": "ts-node-dev --inspect-brk=9229 -- ./src/bin/www.ts",
+    "build": "rimraf ./build && tsc"
+  },
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "bluebird": "^3.7.2",
+    "bluebird-global": "^1.0.1",
+    "cookie-parser": "~1.4.4",
+    "dayjs": "^1.10.5",
+    "dotenv": "^10.0.0",
+    "express": "~4.16.1",
+    "iterare": "^1.2.1",
+    "lodash": "^4.17.21",
+    "tslib": "^1.14.1"
+  },
+  "devDependencies": {
+    "@types/app-root-path": "^1.2.4",
+    "@types/bluebird": "^3.5.35",
+    "@types/bluebird-global": "^3.5.12",
+    "@types/dotenv": "^8.2.0",
+    "@types/jest": "^26.0.23",
+    "@types/lodash": "^4.14.170",
+    "@types/node": "^12.20.14",
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "jest": "^27.0.4",
+    "readonly-date": "^1.0.0",
+    "rimraf": "^2.7.1",
+    "ts-node-dev": "^1.1.6",
+    "typescript": "^4.3.2"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
