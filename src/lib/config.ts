@@ -4,6 +4,7 @@ import { DeepReadonly } from './types';
 
 export interface Config {
   host: string;
+  port: number;
   mongoDbUrl: string;
   logLevel: string;
 }
@@ -36,13 +37,23 @@ if (loadError) {
 }
 
 function getConfig(): Config {
-  const key = projectEnvPrefix + 'MONGO_DB';
+  let key = projectEnvPrefix + 'MONGO_DB';
   const mongoDbUrl = process.env[key];
   if (!mongoDbUrl) {
     throw new Error(`Env "${key}": MongoDB url is missing`);
   }
+  key = projectEnvPrefix + 'PORT';
+  const port = Number.parseInt(
+    process.env[projectEnvPrefix + 'PORT'] ?? '5000'
+  );
+  if (Number.isNaN(port)) {
+    throw new Error(
+      `Env "${key}": port "${process.env[key] ?? ''}" is not a number`
+    );
+  }
   return {
-    host: process.env[projectEnvPrefix + 'HOST'] || 'localhost:5000',
+    host: process.env[projectEnvPrefix + 'HOST'] || 'localhost',
+    port,
     mongoDbUrl,
     logLevel:
       process.env[projectEnvPrefix + 'LOG_LEVEL'] ||

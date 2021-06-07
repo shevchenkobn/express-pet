@@ -23,7 +23,7 @@ configure({
       compress: false,
       maxLogSize: 1024 ** 2 * 4,
       layout: {
-        type: 'colored',
+        type: 'basic',
       },
     },
   },

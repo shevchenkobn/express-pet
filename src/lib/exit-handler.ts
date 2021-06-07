@@ -3,18 +3,6 @@ import { Nullable } from './types';
 
 export type ExitHandler = () => void | PromiseLike<void>;
 
-const list: ExitHandler[] = [];
-
-const exitTimeout = 3000;
-
-let handled = false;
-type SignalListenerWithCode = (
-  signal: NodeJS.Signals,
-  exitCode?: number
-) => void;
-
-let onSignalHandler: Nullable<SignalListenerWithCode> = null;
-
 const errorHandler: (err: any, p?: Promise<any>) => void = (err, p) => {
   if (p) {
     logger.error('Unhandled promise rejection for ');
@@ -40,6 +28,13 @@ const errorHandler: (err: any, p?: Promise<any>) => void = (err, p) => {
 };
 process.on('uncaughtException', errorHandler);
 process.on('unhandledRejection', errorHandler);
+
+type SignalListenerWithCode = (
+  signal: NodeJS.Signals,
+  exitCode?: number
+) => void;
+
+let onSignalHandler: Nullable<SignalListenerWithCode> = null;
 
 export function bindOnExitHandler(handler: ExitHandler, unshift = false) {
   if (unshift) {
@@ -71,6 +66,8 @@ export function exitGracefully(exitCode: number) {
     process.exit(exitCode);
   }
 }
+
+const exitTimeout = 3000;
 
 export function enableExitTimeout() {
   if (!timeoutEnabled) {
@@ -117,8 +114,11 @@ function removeListeners() {
   onSignalHandler = null;
 }
 
+let handled = false;
 let timeoutEnabled = true;
 let timeout: Nullable<NodeJS.Timeout> = null;
+const list: ExitHandler[] = [];
+
 async function execHandlers() {
   if (handled) {
     logger.info('Process exit handlers are being executed. Waiting...');
