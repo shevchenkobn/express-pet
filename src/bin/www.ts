@@ -1,3 +1,4 @@
-import { config } from '../config';
+import { config } from '../lib/config';
+import { logger } from '../lib/logger';
 
-console.log('binGO', config);
+logger.log('binGO', config);

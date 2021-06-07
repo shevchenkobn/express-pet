@@ -68,14 +68,6 @@ export type DeepPartial<T> = T extends PartialMarker<infer PT>
   ? Set<DeepPartial<V>>
   : T extends (infer V)[]
   ? DeepPartial<V>[]
-  : T extends ReadonlyGuardedMap<infer K, infer V>
-  ? ReadonlyGuardedMap<DeepPartial<K>, DeepPartial<V>>
-  : T extends ReadonlyMap<infer K, infer V>
-  ? ReadonlyMap<DeepPartial<K>, DeepPartial<V>>
-  : T extends ReadonlySet<infer V>
-  ? ReadonlySet<DeepPartial<V>>
-  : T extends ReadonlyArray<infer V>
-  ? ReadonlyArray<DeepPartial<V>>
   : DeepPartialObject<T>;
 export type DeepPartialObject<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;

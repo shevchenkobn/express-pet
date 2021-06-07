@@ -1,15 +1,14 @@
 import { config as loadConfig } from 'dotenv';
 import appRootPath from 'app-root-path';
-import { DeepReadonly } from './lib/types';
-
-export const projectEnvPrefix = 'EXPE_';
+import { DeepReadonly } from './types';
 
 export interface Config {
   host: string;
   mongoDbUrl: string;
+  logLevel: string;
 }
 
-export function isDevelopment(): boolean {
+export function isNotProduction(): boolean {
   return (
     !!process.env.DEBUG ||
     !process.env.NODE_ENV ||
@@ -17,11 +16,13 @@ export function isDevelopment(): boolean {
   );
 }
 
+export const projectEnvPrefix = 'EXPE_';
+
 const envConfig = loadConfig({
   path: appRootPath.resolve(
     process.env[projectEnvPrefix + 'CONFIG'] || './config/.env'
   ),
-  debug: isDevelopment(),
+  debug: isNotProduction(),
 });
 const loadError = envConfig.error as NodeJS.ErrnoException;
 if (loadError) {
@@ -43,6 +44,9 @@ function getConfig(): Config {
   return {
     host: process.env[projectEnvPrefix + 'HOST'] || 'localhost:5000',
     mongoDbUrl,
+    logLevel:
+      process.env[projectEnvPrefix + 'LOG_LEVEL'] ||
+      (isNotProduction() ? 'DEBUG' : 'WARN'),
   };
 }
 
