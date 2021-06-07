@@ -29,11 +29,7 @@ const errorHandler: (err: any, p?: Promise<any>) => void = (err, p) => {
 process.on('uncaughtException', errorHandler);
 process.on('unhandledRejection', errorHandler);
 
-type SignalListenerWithCode = (
-  signal: NodeJS.Signals,
-  exitCode?: number
-) => void;
-
+type SignalListenerWithCode = (signal?: NodeJS.Signals) => void;
 let onSignalHandler: Nullable<SignalListenerWithCode> = null;
 
 export function bindOnExitHandler(handler: ExitHandler, unshift = false) {
@@ -61,7 +57,7 @@ export function unbindOnExitHandler(handler: ExitHandler) {
 
 export function exitGracefully(exitCode: number) {
   if (onSignalHandler) {
-    onSignalHandler('SIGQUIT', exitCode);
+    onSignalHandler();
   } else {
     process.exit(exitCode);
   }
@@ -86,14 +82,17 @@ export function disableExitTimeout() {
 }
 
 function initListeners() {
-  onSignalHandler = (signal, exitCode = 0) => {
+  onSignalHandler = (signal) => {
+    if (signal) {
+      logger.info(`Received signal ${signal}`);
+    }
     execHandlers()
       .catch((err) => {
         logger.error(err);
         process.exit(1);
       })
       .then(() => {
-        process.exit(exitCode);
+        process.exit(0);
       });
   };
   process.on('SIGINT', onSignalHandler);

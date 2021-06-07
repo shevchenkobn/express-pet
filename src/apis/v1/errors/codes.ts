@@ -1,13 +1,15 @@
 export enum ErrorCode {
-  JSON_BAD = 'JSON_BAD',
+  JsonBad = 'json.bad',
 
-  OPENAPI_VALIDATION = 'OPENAPI_VALIDATION',
+  OpenApiValidation = 'openApi.validation',
 
-  SERVER = 'SERVER',
-  SERVER_OPENAPI_RESPONSE_VALIDATION = 'SERVER_OPENAPI_RESPONSE_VALIDATION',
-  NOT_FOUND = 'NOT_FOUND',
+  Server = 'server',
+  ServerOpenapiResponseValidation = 'server.openApi.response.validation',
+  NotFound = 'notFound',
+
+  AssessedDiamondNotFound = 'assessedDiamond.notFound',
 }
 
 export type ServerErrorCode =
-  | ErrorCode.SERVER
-  | ErrorCode.SERVER_OPENAPI_RESPONSE_VALIDATION;
+  | ErrorCode.Server
+  | ErrorCode.ServerOpenapiResponseValidation;

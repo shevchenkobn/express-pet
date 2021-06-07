@@ -15,7 +15,7 @@ export class ResponseValidationError extends ServerError {
     message?: string
   ) {
     super(
-      ErrorCode.SERVER_OPENAPI_RESPONSE_VALIDATION,
+      ErrorCode.ServerOpenapiResponseValidation,
       validationError,
       message
     );

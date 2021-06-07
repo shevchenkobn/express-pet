@@ -35,7 +35,7 @@ export function getOpenApiOptions(
 }
 
 export function getOpenApiResolversBasePath() {
-  return path.join(__dirname, '../openapi/resolvers/');
+  return path.join(__dirname, '../resolvers/');
 }
 
 // FIXME: check, why ErrorObject is missing dataPath in this case

@@ -9,12 +9,13 @@ export const errorHandlingPipeline: ErrorRequestHandler[] = [
   (err, req, res, next) => {
     if (err instanceof LogicError) {
       switch (err.code) {
-        case ErrorCode.SERVER:
-        case ErrorCode.SERVER_OPENAPI_RESPONSE_VALIDATION:
+        case ErrorCode.Server:
+        case ErrorCode.ServerOpenapiResponseValidation:
           res.status(500);
           break;
 
-        case ErrorCode.NOT_FOUND:
+        case ErrorCode.NotFound:
+        case ErrorCode.AssessedDiamondNotFound:
           res.status(404);
           break;
 
@@ -27,18 +28,18 @@ export const errorHandlingPipeline: ErrorRequestHandler[] = [
       if (err instanceof SyntaxError && err.message.includes('JSON')) {
         res
           .status(400)
-          .json(new LogicError(ErrorCode.JSON_BAD, err.message, err));
+          .json(new LogicError(ErrorCode.JsonBad, err.message, err));
       } else if (isOpenApiFinalError(err)) {
         const error = coerceLogicError(err);
         res.status(err.status).json(error);
       } else {
-        res.status(500).json(new ServerError(ErrorCode.SERVER, err));
+        res.status(500).json(new ServerError(ErrorCode.Server, err));
       }
     }
 
     if (
       res.statusCode === 500 &&
-      err.code !== ErrorCode.SERVER_OPENAPI_RESPONSE_VALIDATION
+      err.code !== ErrorCode.ServerOpenapiResponseValidation
     ) {
       logger.error(`Request server error at "${req.url}":`);
       logger.error(err);

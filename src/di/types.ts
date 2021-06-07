@@ -2,10 +2,9 @@
 import 'reflect-metadata';
 import { decorate, injectable } from 'inversify';
 
-export const ASYNC_INIT = Symbol.for('@asyncInit');
-
 export const TYPES = {
-  DbConnection: Symbol.for('DbConnection'),
+  MongoDbConnectionString: Symbol.for('MongoDbConnectionString'),
+  MongoDbConnection: Symbol.for('MongoDbConnection'),
 };
 
 const injectables = new Set<any>();

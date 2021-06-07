@@ -1,13 +1,13 @@
 import { Sema } from 'async-sema';
 import { noop } from 'lodash';
 
-export interface IDisposable {
+export interface Disposable {
   readonly isDisposed: boolean;
 
   dispose(): Promise<void>;
 }
 
-export function isDisposable(obj: unknown): obj is IDisposable {
+export function isDisposable(obj: unknown): obj is Disposable {
   const value = obj as any;
   return (
     typeof value.dispose === 'function' && typeof value.isDisposed === 'boolean'
@@ -15,19 +15,25 @@ export function isDisposable(obj: unknown): obj is IDisposable {
 }
 
 export type DisposeFunction = () => any;
+export type IsDisposeedUpdaterFunction = () => boolean | Promise<boolean>;
 
-export class Disposer implements IDisposable {
-  private _isDisposedValue: boolean;
+export class Disposer implements Disposable {
+  private isDisposedValue: boolean;
   private disposeSemaphore: Sema;
   private doDispose: DisposeFunction;
+  private isDisposedUpdater: IsDisposeedUpdaterFunction;
 
   get isDisposed() {
-    return this._isDisposedValue;
+    return this.isDisposedValue;
   }
 
-  constructor(disposer: DisposeFunction = noop) {
+  constructor(
+    disposer: DisposeFunction = noop,
+    isDisposedUpdater: IsDisposeedUpdaterFunction = () => true
+  ) {
     this.doDispose = disposer;
-    this._isDisposedValue = false;
+    this.isDisposedUpdater = isDisposedUpdater;
+    this.isDisposedValue = false;
     this.disposeSemaphore = new Sema(1);
   }
 
@@ -38,7 +44,7 @@ export class Disposer implements IDisposable {
         return Promise.resolve();
       }
       await this.doDispose();
-      this._isDisposedValue = true;
+      this.isDisposedValue = await this.isDisposedUpdater();
     } finally {
       this.disposeSemaphore.release();
     }
@@ -47,6 +53,14 @@ export class Disposer implements IDisposable {
 
 export const ASYNC_INIT: unique symbol = Symbol.for('@asyncInit');
 
-export interface IAsyncInitializable {
+export interface AsyncInitializable {
   readonly [ASYNC_INIT]: Promise<any>;
+}
+
+export function isAsyncInitializable(obj: any): obj is AsyncInitializable {
+  return (
+    obj &&
+    obj[ASYNC_INIT] instanceof Object &&
+    typeof obj[ASYNC_INIT].then === 'function'
+  );
 }

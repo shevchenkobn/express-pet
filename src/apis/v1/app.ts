@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { initialize } from 'express-openapi';
 import { OpenAPIV3 } from 'openapi-types';
+import { getContainer, getContainerInitPromise } from '../../di/container';
 import { isNotProduction } from '../../lib/config';
 import { logger } from '../../lib/logger';
 import { errorHandlingPipeline } from './middlewares/error-handler-pipeline';
@@ -32,6 +33,10 @@ export async function createApp() {
 
   app.use(errorHandlingPipeline);
   app.use(notFoundHandler);
+
+  // TODO: add child container
+  const container = getContainer();
+  await getContainerInitPromise();
 
   return { app, openapi: openapiFramework };
 }

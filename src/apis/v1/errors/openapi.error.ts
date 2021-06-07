@@ -26,7 +26,7 @@ export function coerceLogicError(
   err: IOpenApiFinalError
 ): IOpenApiFinalLogicError {
   const error = err as IOpenApiFinalLogicError;
-  error.code = ErrorCode.OPENAPI_VALIDATION;
+  error.code = ErrorCode.OpenApiValidation;
   return error;
 }
 
