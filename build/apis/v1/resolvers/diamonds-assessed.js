@@ -6,13 +6,12 @@ const openapi_1 = require("../openapi");
 const assessed_diamonds_1 = require("../openapi/components/schemas/assessed-diamonds");
 const non_assessed_diamonds_1 = require("../openapi/components/schemas/non-assessed-diamonds");
 function default_1(di) {
-    console.log('di', di);
     const pathItemHandler = {};
     const diamondsCommon = di.get(api_v1_types_1.ApiV1Types.DiamondsCommon);
     pathItemHandler.post = async (req, res, next) => {
         const nonAssessedDiamond = assessed_diamond_1.fromLooseNonAssessedDiamond(req.body);
         const assessedDiamond = await diamondsCommon.assessDiamond(nonAssessedDiamond);
-        return assessedDiamond;
+        res.status(200).json(assessedDiamond);
     };
     pathItemHandler.post.apiDoc = {
         description: 'Assess diamond',

@@ -7,17 +7,25 @@ import { NonAssessedDiamondSchema } from '../openapi/components/schemas/non-asse
 import { DiamondsCommon } from '../services/diamonds.common';
 
 export default function (di: Container) {
-  console.log('di', di);
   const pathItemHandler: OpenApiPathItemHandler = {};
 
   const diamondsCommon = di.get<DiamondsCommon>(ApiV1Types.DiamondsCommon);
 
+  /* Example
+{
+  "name": "First one",
+  "carat": "3.1415926535898",
+  "cut": "cushion",
+  "color": "d",
+  "clarity": "fl"
+}
+   */
   pathItemHandler.post = async (req, res, next) => {
     const nonAssessedDiamond = fromLooseNonAssessedDiamond(req.body);
     const assessedDiamond = await diamondsCommon.assessDiamond(
       nonAssessedDiamond
     );
-    return assessedDiamond;
+    res.status(200).json(assessedDiamond);
   };
   pathItemHandler.post.apiDoc = {
     description: 'Assess diamond',
