@@ -18,6 +18,8 @@ const types_1 = require("../../../di/types");
 const assessed_diamond_1 = require("../../../models/assessed-diamond");
 const diamonds_repository_1 = require("../../../repositories/diamonds.repository");
 const diamond_calculator_service_1 = require("../../../services/diamond-calculator.service");
+const codes_1 = require("../errors/codes");
+const entity_not_found_error_1 = require("../errors/entity-not-found.error");
 let DiamondsCommon = class DiamondsCommon {
     constructor(calculator, diamonds) {
         this.calculator = calculator;
@@ -27,6 +29,16 @@ let DiamondsCommon = class DiamondsCommon {
         const assessedDiamond = assessed_diamond_1.cloneAssessedDiamond(nonAssessedDiamond);
         assessedDiamond.price = this.calculator.calculatePrice(nonAssessedDiamond);
         return this.diamonds.saveAssessedDiamond(assessedDiamond);
+    }
+    getSimilarDiamonds(diamondRange, skipLimit) {
+        return this.diamonds.getSimilarDiamonds(diamondRange, skipLimit);
+    }
+    async getAssessedDiamonds(id) {
+        const diamond = await this.diamonds.getDiamond(id);
+        if (!diamond) {
+            throw new entity_not_found_error_1.EntityNotFoundError(id, codes_1.ErrorCode.AssessedDiamondNotFound);
+        }
+        return diamond;
     }
 };
 DiamondsCommon = __decorate([

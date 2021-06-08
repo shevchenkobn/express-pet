@@ -15,7 +15,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.toShallowDocument = exports.MongodbConnectionService = void 0;
+exports.decimal128ToDecimal = exports.decimalToDecimal128 = exports.toShallowDocument = exports.MongodbConnectionService = void 0;
 const decimal_js_1 = __importDefault(require("decimal.js"));
 const inversify_1 = require("inversify");
 const mongodb_1 = require("mongodb");
@@ -70,7 +70,7 @@ function toShallowDocument(item) {
             continue;
         }
         if (item[prop] instanceof decimal_js_1.default) {
-            document[prop] = mongodb_1.Decimal128.fromString(item[prop].toString());
+            document[prop] = decimalToDecimal128(item[prop]);
         }
         else {
             document[prop] = item[prop];
@@ -79,4 +79,12 @@ function toShallowDocument(item) {
     return document;
 }
 exports.toShallowDocument = toShallowDocument;
+function decimalToDecimal128(decimal) {
+    return mongodb_1.Decimal128.fromString(decimal.toString());
+}
+exports.decimalToDecimal128 = decimalToDecimal128;
+function decimal128ToDecimal(decimal) {
+    return new decimal_js_1.default(decimal.toString());
+}
+exports.decimal128ToDecimal = decimal128ToDecimal;
 //# sourceMappingURL=mongodb-connection.service.js.map

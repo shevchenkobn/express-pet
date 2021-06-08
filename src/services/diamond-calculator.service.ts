@@ -2,7 +2,11 @@ import Decimal from 'decimal.js';
 import { injectable } from 'inversify';
 import { iterate } from 'iterare';
 import { GuardedMap } from '../lib/map';
-import { DeepReadonlyArray, DeepReadonlyGuardedMap } from '../lib/types';
+import {
+  DeepReadonly,
+  DeepReadonlyArray,
+  DeepReadonlyGuardedMap,
+} from '../lib/types';
 import {
   DiamondClarity,
   DiamondColor,
@@ -17,7 +21,7 @@ export class DiamondCalculatorService {
   private readonly getCalculationTable: DeepReadonlyArray<CalculationTableEntry> =
     getCalculationTable();
 
-  calculatePrice(diamond: DiamondProperties): Decimal {
+  calculatePrice(diamond: DeepReadonly<DiamondProperties>): Decimal {
     const pricesForCaratRange = iterate(this.getCalculationTable).find(
       ({ caratThreshold }) => diamond.carat >= caratThreshold
     )?.priceTable;

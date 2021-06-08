@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import { DeepReadonly } from '../lib/types';
 
 export interface DiamondProperties {
   carat: Decimal;
@@ -75,6 +76,10 @@ export interface DiamondRange {
     | Decimal
     | {
         min: Decimal;
+        max?: Decimal;
+      }
+    | {
+        min?: Decimal;
         max: Decimal;
       };
   cut: DiamondCut;
@@ -82,16 +87,23 @@ export interface DiamondRange {
   clarity: DiamondClarity;
 }
 
-export function fromLoosePartialDiamondRange(obj: any): Partial<DiamondRange> {
+export function fromLoosePartialDiamondRange(
+  obj: DeepReadonly<any>
+): Partial<DiamondRange> {
   const range = {} as Partial<DiamondRange>;
   if (obj.carat) {
-    range.carat =
-      typeof obj.carat === 'string'
-        ? new Decimal(obj.carat)
-        : {
-            min: new Decimal(obj.carat.min),
-            max: new Decimal(obj.carat.max),
-          };
+    if (typeof obj.carat === 'string') {
+      range.carat = new Decimal(obj.carat);
+    } else {
+      const carat = {} as Exclude<DiamondRange['carat'], Decimal>;
+      if (obj.min) {
+        carat.min = new Decimal(obj.carat.min);
+      }
+      if (obj.max) {
+        carat.max = new Decimal(obj.carat.max);
+      }
+      range.carat = carat;
+    }
   }
   if (obj.cut) {
     range.cut = obj.cut.toLowerCase();

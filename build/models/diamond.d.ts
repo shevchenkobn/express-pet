@@ -1,4 +1,5 @@
 import Decimal from 'decimal.js';
+import { DeepReadonly } from '../lib/types';
 export interface DiamondProperties {
     carat: Decimal;
     cut: DiamondCut;
@@ -61,10 +62,13 @@ export declare enum DiamondClarity {
 export interface DiamondRange {
     carat: Decimal | {
         min: Decimal;
+        max?: Decimal;
+    } | {
+        min?: Decimal;
         max: Decimal;
     };
     cut: DiamondCut;
     color: DiamondColor;
     clarity: DiamondClarity;
 }
-export declare function fromLoosePartialDiamondRange(obj: any): Partial<DiamondRange>;
+export declare function fromLoosePartialDiamondRange(obj: DeepReadonly<any>): Partial<DiamondRange>;

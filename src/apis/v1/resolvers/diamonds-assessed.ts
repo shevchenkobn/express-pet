@@ -1,8 +1,12 @@
 import { Container } from 'inversify';
 import { fromLooseNonAssessedDiamond } from '../../../models/assessed-diamond';
+import { DiamondRange } from '../../../models/diamond';
+import { SkipLimit } from '../../../services/mongodb-connection.service';
 import { ApiV1Types } from '../di/api-v1.types';
 import { OpenApiPathItemHandler, OpenApiTags } from '../openapi';
+import { SkipLimitParameter } from '../openapi/components/parameters/skip-limit';
 import { AssessedDiamondSchema } from '../openapi/components/schemas/assessed-diamonds';
+import { DiamondRangeSchema } from '../openapi/components/schemas/diamond-range';
 import { NonAssessedDiamondSchema } from '../openapi/components/schemas/non-assessed-diamonds';
 import { DiamondsCommon } from '../services/diamonds.common';
 
@@ -45,6 +49,51 @@ export default function (di: Container) {
         content: {
           'application/json': {
             schema: AssessedDiamondSchema,
+          },
+        },
+      },
+    },
+  };
+
+  pathItemHandler.get = async (req, res, next) => {
+    const filter = req.query.filter as unknown as DiamondRange;
+    const skipLimit = req.query.skipLimit as unknown as SkipLimit;
+    diamondsCommon.getSimilarDiamonds(filter, skipLimit).then((diamonds) => {
+      res.status(200).json(diamonds);
+    });
+  };
+  pathItemHandler.get.apiDoc = {
+    description: 'Get similar assessed diamond',
+    tags: [OpenApiTags.Diamonds],
+    parameters: [
+      {
+        name: 'filter',
+        in: 'query',
+        description: 'Parameters for query',
+        required: true,
+        schema: DiamondRangeSchema,
+      },
+      SkipLimitParameter,
+    ],
+    responses: {
+      200: {
+        description: 'List of similar assessed diamonds',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              required: ['diamonds', 'count'],
+              properties: {
+                diamonds: {
+                  type: 'array',
+                  items: AssessedDiamondSchema,
+                },
+                count: {
+                  type: 'integer',
+                  minimum: 0,
+                },
+              },
+            },
           },
         },
       },

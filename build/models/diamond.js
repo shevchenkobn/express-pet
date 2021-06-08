@@ -64,13 +64,19 @@ var DiamondClarity;
 function fromLoosePartialDiamondRange(obj) {
     const range = {};
     if (obj.carat) {
-        range.carat =
-            typeof obj.carat === 'string'
-                ? new decimal_js_1.default(obj.carat)
-                : {
-                    min: new decimal_js_1.default(obj.carat.min),
-                    max: new decimal_js_1.default(obj.carat.max),
-                };
+        if (typeof obj.carat === 'string') {
+            range.carat = new decimal_js_1.default(obj.carat);
+        }
+        else {
+            const carat = {};
+            if (obj.min) {
+                carat.min = new decimal_js_1.default(obj.carat.min);
+            }
+            if (obj.max) {
+                carat.max = new decimal_js_1.default(obj.carat.max);
+            }
+            range.carat = carat;
+        }
     }
     if (obj.cut) {
         range.cut = obj.cut.toLowerCase();
