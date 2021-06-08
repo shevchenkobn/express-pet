@@ -14,7 +14,8 @@ function isNotProduction() {
 exports.isNotProduction = isNotProduction;
 exports.projectEnvPrefix = 'EXPE_';
 const envConfig = dotenv_1.config({
-    path: app_root_path_1.default.resolve(process.env[exports.projectEnvPrefix + 'CONFIG'] || './config/.env'),
+    path: process.env[exports.projectEnvPrefix + 'CONFIG'] ||
+        app_root_path_1.default.resolve('./config/.env'),
     debug: isNotProduction(),
 });
 const loadError = envConfig.error;

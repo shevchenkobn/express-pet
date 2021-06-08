@@ -20,9 +20,9 @@ export function isNotProduction(): boolean {
 export const projectEnvPrefix = 'EXPE_';
 
 const envConfig = loadConfig({
-  path: appRootPath.resolve(
-    process.env[projectEnvPrefix + 'CONFIG'] || './config/.env'
-  ),
+  path:
+    process.env[projectEnvPrefix + 'CONFIG'] ||
+    appRootPath.resolve('./config/.env'),
   debug: isNotProduction(),
 });
 const loadError = envConfig.error as NodeJS.ErrnoException;
