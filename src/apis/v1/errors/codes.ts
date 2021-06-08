@@ -10,6 +10,8 @@ export enum ErrorCode {
   AssessedDiamondNotFound = 'assessedDiamond.notFound',
 }
 
+export const validErrorCodes = Object.values(ErrorCode);
+
 export type ServerErrorCode =
   | ErrorCode.Server
   | ErrorCode.ServerOpenapiResponseValidation;

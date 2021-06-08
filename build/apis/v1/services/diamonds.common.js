@@ -33,7 +33,7 @@ let DiamondsCommon = class DiamondsCommon {
     getSimilarDiamonds(diamondRange, skipLimit) {
         return this.diamonds.getSimilarDiamonds(diamondRange, skipLimit);
     }
-    async getAssessedDiamonds(id) {
+    async getAssessedDiamond(id) {
         const diamond = await this.diamonds.getDiamond(id);
         if (!diamond) {
             throw new entity_not_found_error_1.EntityNotFoundError(id, codes_1.ErrorCode.AssessedDiamondNotFound);

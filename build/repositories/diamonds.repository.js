@@ -89,7 +89,6 @@ let DiamondsRepository = DiamondsRepository_1 = class DiamondsRepository {
                 };
             }
         }
-        console.log(query);
         const cursor = this.collection.find(query);
         const [diamonds, count] = await Promise.all([
             DiamondsRepository_1.loadList(cursor.clone().skip(pagination.skip).limit(pagination.limit)),

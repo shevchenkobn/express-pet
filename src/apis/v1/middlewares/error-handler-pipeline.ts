@@ -5,6 +5,16 @@ import { LogicError } from '../errors/logic.error';
 import { coerceLogicError, isOpenApiFinalError } from '../errors/openapi.error';
 import { ServerError } from '../errors/server.error';
 
+export const errorCodes404 = [
+  ErrorCode.NotFound,
+  ErrorCode.AssessedDiamondNotFound,
+];
+
+export const errorCodes500 = [
+  ErrorCode.Server,
+  ErrorCode.ServerOpenapiResponseValidation,
+];
+
 export const errorHandlingPipeline: ErrorRequestHandler[] = [
   (err, req, res, next) => {
     if (err instanceof LogicError) {

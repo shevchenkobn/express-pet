@@ -1,11 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorHandlingPipeline = void 0;
+exports.errorHandlingPipeline = exports.errorCodes500 = exports.errorCodes404 = void 0;
 const logger_1 = require("../../../lib/logger");
 const codes_1 = require("../errors/codes");
 const logic_error_1 = require("../errors/logic.error");
 const openapi_error_1 = require("../errors/openapi.error");
 const server_error_1 = require("../errors/server.error");
+exports.errorCodes404 = [
+    codes_1.ErrorCode.NotFound,
+    codes_1.ErrorCode.AssessedDiamondNotFound,
+];
+exports.errorCodes500 = [
+    codes_1.ErrorCode.Server,
+    codes_1.ErrorCode.ServerOpenapiResponseValidation,
+];
 exports.errorHandlingPipeline = [
     (err, req, res, next) => {
         if (err instanceof logic_error_1.LogicError) {

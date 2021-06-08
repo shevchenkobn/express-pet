@@ -110,7 +110,6 @@ The points are outlined top-to-down, from general to specifics.
   Files *src/apis/v1/resolvers/\*.ts* just handle status codes and other HTTP-related things.
 
 ## FIXME:
-- Non-2xx responses documentation is missing, but general approach can be seen from the way OpenAPI schemas shared (see *src/apis/v1/resolvers* and *src/apis/v1/openapi*).
 - No reconnection handling implemented in MongoDB connection service.
 - `ts-node-dev` isn't able to work with filesystem-based routing from `express-openapi`. Switching to good old `nodemon` is preferable.
 - Maybe, `eslint` requires some tweaking.

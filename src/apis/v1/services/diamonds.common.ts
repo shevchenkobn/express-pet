@@ -30,11 +30,14 @@ export class DiamondsCommon {
     return this.diamonds.saveAssessedDiamond(assessedDiamond);
   }
 
-  getSimilarDiamonds(diamondRange: DeepReadonly<Partial<DiamondRange>>, skipLimit: DeepReadonly<SkipLimit>) {
+  getSimilarDiamonds(
+    diamondRange: DeepReadonly<Partial<DiamondRange>>,
+    skipLimit: DeepReadonly<SkipLimit>
+  ) {
     return this.diamonds.getSimilarDiamonds(diamondRange, skipLimit);
   }
 
-  async getAssessedDiamonds(id: string) {
+  async getAssessedDiamond(id: string) {
     const diamond = await this.diamonds.getDiamond(id);
     if (!diamond) {
       throw new EntityNotFoundError(id, ErrorCode.AssessedDiamondNotFound);

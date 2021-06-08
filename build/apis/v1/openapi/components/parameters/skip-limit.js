@@ -6,18 +6,22 @@ exports.SkipLimitParameter = {
     in: 'query',
     description: 'Skip & limit parameters',
     required: true,
-    schema: {
-        type: 'object',
-        required: ['limit'],
-        properties: {
-            skip: {
-                type: 'integer',
-                minimum: 0,
-            },
-            limit: {
-                type: 'integer',
-                minimum: 0,
-                maximum: 100,
+    content: {
+        'application/json': {
+            schema: {
+                type: 'object',
+                required: ['limit'],
+                properties: {
+                    skip: {
+                        type: 'integer',
+                        minimum: 0,
+                    },
+                    limit: {
+                        type: 'integer',
+                        minimum: 0,
+                        maximum: 100,
+                    },
+                },
             },
         },
     },

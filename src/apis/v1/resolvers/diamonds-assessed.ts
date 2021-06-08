@@ -5,10 +5,12 @@ import { SkipLimit } from '../../../services/mongodb-connection.service';
 import { ApiV1Types } from '../di/api-v1.types';
 import { OpenApiPathItemHandler, OpenApiTags } from '../openapi';
 import { SkipLimitParameter } from '../openapi/components/parameters/skip-limit';
+import { ServerErrorResponse } from '../openapi/components/responses/server-error';
 import { AssessedDiamondSchema } from '../openapi/components/schemas/assessed-diamonds';
 import { DiamondRangeSchema } from '../openapi/components/schemas/diamond-range';
 import { NonAssessedDiamondSchema } from '../openapi/components/schemas/non-assessed-diamonds';
 import { DiamondsCommon } from '../services/diamonds.common';
+import { fromQueryParam } from '../utils';
 
 export default function (di: Container) {
   const pathItemHandler: OpenApiPathItemHandler = {};
@@ -25,11 +27,15 @@ export default function (di: Container) {
 }
    */
   pathItemHandler.post = async (req, res, next) => {
-    const nonAssessedDiamond = fromLooseNonAssessedDiamond(req.body);
-    const assessedDiamond = await diamondsCommon.assessDiamond(
-      nonAssessedDiamond
-    );
-    res.status(200).json(assessedDiamond);
+    try {
+      const nonAssessedDiamond = fromLooseNonAssessedDiamond(req.body);
+      const assessedDiamond = await diamondsCommon.assessDiamond(
+        nonAssessedDiamond
+      );
+      res.status(200).json(assessedDiamond);
+    } catch (err) {
+      next(err);
+    }
   };
   pathItemHandler.post.apiDoc = {
     description: 'Assess diamond',
@@ -52,15 +58,19 @@ export default function (di: Container) {
           },
         },
       },
+      500: ServerErrorResponse,
     },
   };
 
   pathItemHandler.get = async (req, res, next) => {
-    const filter = req.query.filter as unknown as DiamondRange;
-    const skipLimit = req.query.skipLimit as unknown as SkipLimit;
-    diamondsCommon.getSimilarDiamonds(filter, skipLimit).then((diamonds) => {
-      res.status(200).json(diamonds);
-    });
+    const filter = fromQueryParam<DiamondRange>(req.query.filter as string);
+    const skipLimit = fromQueryParam<SkipLimit>(req.query.skipLimit as string);
+    diamondsCommon
+      .getSimilarDiamonds(filter, skipLimit)
+      .then((diamonds) => {
+        res.status(200).json(diamonds);
+      })
+      .catch(next);
   };
   pathItemHandler.get.apiDoc = {
     description: 'Get similar assessed diamond',
@@ -71,7 +81,11 @@ export default function (di: Container) {
         in: 'query',
         description: 'Parameters for query',
         required: true,
-        schema: DiamondRangeSchema,
+        content: {
+          'application/json': {
+            schema: DiamondRangeSchema,
+          },
+        },
       },
       SkipLimitParameter,
     ],
@@ -97,6 +111,7 @@ export default function (di: Container) {
           },
         },
       },
+      500: ServerErrorResponse,
     },
   };
 

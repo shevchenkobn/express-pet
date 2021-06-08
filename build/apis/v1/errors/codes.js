@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ErrorCode = void 0;
+exports.validErrorCodes = exports.ErrorCode = void 0;
 var ErrorCode;
 (function (ErrorCode) {
     ErrorCode["JsonBad"] = "json.bad";
@@ -10,4 +10,5 @@ var ErrorCode;
     ErrorCode["NotFound"] = "notFound";
     ErrorCode["AssessedDiamondNotFound"] = "assessedDiamond.notFound";
 })(ErrorCode = exports.ErrorCode || (exports.ErrorCode = {}));
+exports.validErrorCodes = Object.values(ErrorCode);
 //# sourceMappingURL=codes.js.map
