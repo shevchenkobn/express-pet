@@ -5,18 +5,16 @@ export type ExitHandler = () => void | PromiseLike<void>;
 
 const errorHandler: (err: any, p?: Promise<any>) => void = (err, p) => {
   if (p) {
-    logger.error('Unhandled promise rejection for ');
-    logger.error(p);
+    logger.fatal('Unhandled promise rejection for ', p, err);
   } else {
-    logger.error('Unhandled exception!');
+    logger.fatal('Unhandled exception!', err);
   }
-  logger.error(err);
   execHandlers()
     .catch((err) => {
-      logger.error(
-        'The process is not shut down gracefully! Error while error handling.'
+      logger.fatal(
+        'The process is not shut down gracefully! Error while error handling.',
+        err
       );
-      logger.error(err);
     })
     .finally(() => {
       process.on('exit', () => {
@@ -88,7 +86,7 @@ function initListeners() {
     }
     execHandlers()
       .catch((err) => {
-        logger.error(err);
+        logger.fatal(err);
         process.exit(1);
       })
       .then(() => {
@@ -138,7 +136,7 @@ async function execHandlers() {
 
 function setExitTimeout() {
   timeout = setTimeout(() => {
-    logger.error('The process exited due to too long wait for exit handlers!');
+    logger.fatal('The process exited due to too long wait for exit handlers!');
     process.exit(1);
   }, exitTimeout);
 }

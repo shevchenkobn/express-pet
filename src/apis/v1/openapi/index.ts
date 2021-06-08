@@ -1,19 +1,31 @@
 import bodyParser from 'body-parser';
-import {
-  OpenAPIRequestValidatorArgs,
-  OpenAPIRequestValidatorError,
-} from 'openapi-request-validator';
+import { Container } from 'inversify';
+import { OpenAPIRequestValidatorArgs } from 'openapi-request-validator';
 import { Express } from 'express';
-import { ExpressOpenAPIArgs } from 'express-openapi';
+import { ExpressOpenAPIArgs, Operation } from 'express-openapi';
 import { OpenAPIV3 } from 'openapi-types';
 import * as path from 'path';
 import { isNotProduction } from '../../../lib/config';
 import { logger } from '../../../lib/logger';
 import { OpenapiError } from '../errors/openapi.error';
 
+export interface OpenApiPathItemHandler {
+  parameters?: OpenAPIV3.ParameterObject[];
+  summary?: string;
+  description?: string;
+  get?: Operation;
+  put?: Operation;
+  post?: Operation;
+  delete?: Operation;
+  options?: Operation;
+  head?: Operation;
+  patch?: Operation;
+}
+
 export function getOpenApiOptions(
   app: Express,
-  apiDoc: OpenAPIV3.Document
+  apiDoc: OpenAPIV3.Document,
+  di: Container
 ): ExpressOpenAPIArgs {
   return {
     app,
@@ -24,9 +36,13 @@ export function getOpenApiOptions(
         strict: false,
       }),
     },
+    dependencies: {
+      di,
+    },
     errorTransformer: errorTransformer as any,
     enableObjectCoercion: true,
     exposeApiDocs: true,
+    docsPath: '/api-docs',
     paths: getOpenApiResolversBasePath(),
     pathsIgnore: /\.(spec|test)$/,
     promiseMode: true,
@@ -44,7 +60,13 @@ export const errorTransformer: OpenAPIRequestValidatorArgs['errorTransformer'] =
     return new OpenapiError(openApiError, ajvError as any);
   };
 
-export function getOpenApiDoc(): OpenAPIV3.Document {
+export enum OpenApiTags {
+  Diamonds = 'diamonds',
+}
+
+export const apiPrefix = '/api/v1';
+
+export function getOpenApiDoc(originUrl = ''): OpenAPIV3.Document {
   return {
     openapi: '3.0.3',
     info: {
@@ -53,14 +75,23 @@ export function getOpenApiDoc(): OpenAPIV3.Document {
     },
     servers: [
       {
-        url: '/api/v1',
-        description:
-          'The server will be served from the same host as this document.',
+        url: apiPrefix,
+        description: 'API prefix',
+      },
+      {
+        url: '{originUrl}' + apiPrefix,
+        description: 'Deployment URL',
+        variables: {
+          originUrl: {
+            description: 'Origin URL',
+            default: originUrl,
+          },
+        },
       },
     ],
     tags: [
       {
-        name: 'diamonds',
+        name: OpenApiTags.Diamonds,
         description: 'API to manage diamond estimations.',
       },
     ],

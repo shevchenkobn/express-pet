@@ -1,1 +1,1 @@
-export {};
+import '../import-side-effects';

@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 import { ReadonlyDate } from 'readonly-date';
 import { GuardedMap, ReadonlyGuardedMap } from './map';
 
@@ -19,7 +20,9 @@ export interface ReadonlyMarker<RT> {
 
 export type DeepReadonly<T> = T extends ReadonlyMarker<infer RT>
   ? T[typeof asReadonly]
-  : T extends Date
+  : T extends Decimal
+  ? T
+  : T extends ReadonlyDate
   ? ReadonlyDate
   : T extends ReadonlyGuardedMap<infer K, infer V>
   ? DeepReadonlyGuardedMap<K, V>
@@ -60,8 +63,10 @@ export interface PartialMarker<P> {
 
 export type DeepPartial<T> = T extends PartialMarker<infer PT>
   ? T[typeof asPartial]
+  : T extends Decimal
+  ? T
   : T extends GuardedMap<infer K, infer V>
-  ? GuardedMap<DeepPartial<K>, DeepPartial<V>>
+  ? T
   : T extends Map<infer K, infer V>
   ? Map<DeepPartial<K>, DeepPartial<V>>
   : T extends Set<infer V>
