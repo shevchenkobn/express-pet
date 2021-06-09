@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OpenapiError = exports.coerceLogicError = exports.isOpenApiFinalError = void 0;
+exports.OpenApiError = exports.coerceLogicError = exports.isOpenApiFinalError = void 0;
 const codes_1 = require("./codes");
 function isOpenApiFinalError(err) {
     return (typeof err === 'object' &&
@@ -15,12 +15,12 @@ function coerceLogicError(err) {
     return error;
 }
 exports.coerceLogicError = coerceLogicError;
-class OpenapiError extends Error {
+class OpenApiError extends Error {
     constructor(openApiError, jsonSchemaError, message) {
         super(message);
         this.openApiError = openApiError;
         this.jsonSchemaError = jsonSchemaError;
     }
 }
-exports.OpenapiError = OpenapiError;
-//# sourceMappingURL=openapi.error.js.map
+exports.OpenApiError = OpenApiError;
+//# sourceMappingURL=openapi-error.js.map

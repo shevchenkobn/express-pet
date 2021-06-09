@@ -1,19 +1,13 @@
 import { ErrorRequestHandler } from 'express';
+import { ErrorCode } from '../../../errors/codes';
+import { LogicError } from '../../../errors/logic.error';
+import {
+  coerceLogicError,
+  isOpenApiFinalError,
+} from '../../../errors/openapi-error';
+import { ServerError } from '../../../errors/server.error';
+import { isNotProduction } from '../../../lib/config';
 import { logger } from '../../../lib/logger';
-import { ErrorCode } from '../errors/codes';
-import { LogicError } from '../errors/logic.error';
-import { coerceLogicError, isOpenApiFinalError } from '../errors/openapi.error';
-import { ServerError } from '../errors/server.error';
-
-export const errorCodes404 = [
-  ErrorCode.NotFound,
-  ErrorCode.AssessedDiamondNotFound,
-];
-
-export const errorCodes500 = [
-  ErrorCode.Server,
-  ErrorCode.ServerOpenapiResponseValidation,
-];
 
 export const errorHandlingPipeline: ErrorRequestHandler[] = [
   (err, req, res, next) => {
@@ -33,7 +27,7 @@ export const errorHandlingPipeline: ErrorRequestHandler[] = [
           res.status(400);
           break;
       }
-      res.json(err);
+      res.json(err.asJsonObject(isNotProduction()));
     } else {
       if (err instanceof SyntaxError && err.message.includes('JSON')) {
         res
@@ -43,15 +37,23 @@ export const errorHandlingPipeline: ErrorRequestHandler[] = [
         const error = coerceLogicError(err);
         res.status(err.status).json(error);
       } else {
-        res.status(500).json(new ServerError(ErrorCode.Server, err));
+        res
+          .status(500)
+          .json(
+            new ServerError(ErrorCode.Server, err).asJsonObject(
+              isNotProduction()
+            )
+          );
       }
     }
 
-    if (
-      res.statusCode === 500 &&
-      err.code !== ErrorCode.ServerOpenapiResponseValidation
-    ) {
-      logger.error(`Request server error at "${req.url}":`);
+    if (Math.floor(res.statusCode / 100) === 5) {
+      const errorMessage = `error at "${req.url}":`;
+      logger.error(
+        (err.code !== ErrorCode.ServerOpenapiResponseValidation
+          ? 'Request server '
+          : 'Request response validation') + errorMessage
+      );
       logger.error(err);
     } else {
       logger.debug(`Request error at "${req.url}":`);

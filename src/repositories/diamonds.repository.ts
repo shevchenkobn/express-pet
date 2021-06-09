@@ -2,6 +2,8 @@ import Decimal from 'decimal.js';
 import { inject, injectable } from 'inversify';
 import { Collection, Cursor, FilterQuery, ObjectId, WithId } from 'mongodb';
 import { Types } from '../di/types';
+import { ErrorCode } from '../errors/codes';
+import { EntityNotFoundError } from '../errors/entity-not-found.error';
 import { DeepReadonly, Nullable } from '../lib/types';
 import {
   AssessedDiamond,
@@ -58,16 +60,22 @@ export class DiamondsRepository {
     return assessedDiamond;
   }
 
+  /**
+   * @throws {EntityNotFoundError<string>}
+   * @param {string} id
+   * @returns {Promise<Nullable<AssessedDiamond>>}
+   */
   getDiamond(id: string): Promise<Nullable<AssessedDiamond>> {
     return this.collection
       .findOne({
         _id: new ObjectId(id),
       })
-      .then((document) =>
-        document
-          ? toAssessedDocument(document as WithId<DiamondDocument>)
-          : null
-      );
+      .then((document) => {
+        if (!document) {
+          throw new EntityNotFoundError(id, ErrorCode.AssessedDiamondNotFound);
+        }
+        return toAssessedDocument(document as WithId<DiamondDocument>);
+      });
   }
 
   async getSimilarDiamonds(

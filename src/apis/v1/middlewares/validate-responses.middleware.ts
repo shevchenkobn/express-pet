@@ -3,7 +3,7 @@ import { OpenAPIResponseValidatorValidationError } from 'openapi-response-valida
 import { logger } from '../../../lib/logger';
 import { Optional } from '../../../lib/types';
 import { deserializeResponseBody } from '../../../lib/utils';
-import { ResponseValidationError } from '../errors/response-validation.error';
+import { ResponseValidationError } from '../../../errors/response-validation.error';
 import { OpenApiRequest, OpenApiResponse } from '../openapi/types';
 
 export const validateResponses: Handler = (req, res, next) => {

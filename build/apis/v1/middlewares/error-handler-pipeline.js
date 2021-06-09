@@ -1,19 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.errorHandlingPipeline = exports.errorCodes500 = exports.errorCodes404 = void 0;
+exports.errorHandlingPipeline = void 0;
+const codes_1 = require("../../../errors/codes");
+const logic_error_1 = require("../../../errors/logic.error");
+const openapi_error_1 = require("../../../errors/openapi-error");
+const server_error_1 = require("../../../errors/server.error");
+const config_1 = require("../../../lib/config");
 const logger_1 = require("../../../lib/logger");
-const codes_1 = require("../errors/codes");
-const logic_error_1 = require("../errors/logic.error");
-const openapi_error_1 = require("../errors/openapi.error");
-const server_error_1 = require("../errors/server.error");
-exports.errorCodes404 = [
-    codes_1.ErrorCode.NotFound,
-    codes_1.ErrorCode.AssessedDiamondNotFound,
-];
-exports.errorCodes500 = [
-    codes_1.ErrorCode.Server,
-    codes_1.ErrorCode.ServerOpenapiResponseValidation,
-];
 exports.errorHandlingPipeline = [
     (err, req, res, next) => {
         if (err instanceof logic_error_1.LogicError) {
@@ -30,7 +23,7 @@ exports.errorHandlingPipeline = [
                     res.status(400);
                     break;
             }
-            res.json(err);
+            res.json(err.asJsonObject(config_1.isNotProduction()));
         }
         else {
             if (err instanceof SyntaxError && err.message.includes('JSON')) {
@@ -43,12 +36,16 @@ exports.errorHandlingPipeline = [
                 res.status(err.status).json(error);
             }
             else {
-                res.status(500).json(new server_error_1.ServerError(codes_1.ErrorCode.Server, err));
+                res
+                    .status(500)
+                    .json(new server_error_1.ServerError(codes_1.ErrorCode.Server, err).asJsonObject(config_1.isNotProduction()));
             }
         }
-        if (res.statusCode === 500 &&
-            err.code !== codes_1.ErrorCode.ServerOpenapiResponseValidation) {
-            logger_1.logger.error(`Request server error at "${req.url}":`);
+        if (Math.floor(res.statusCode / 100) === 5) {
+            const errorMessage = `error at "${req.url}":`;
+            logger_1.logger.error((err.code !== codes_1.ErrorCode.ServerOpenapiResponseValidation
+                ? 'Request server '
+                : 'Request response validation') + errorMessage);
             logger_1.logger.error(err);
         }
         else {

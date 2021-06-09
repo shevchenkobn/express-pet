@@ -27,7 +27,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const path = __importStar(require("path"));
 const config_1 = require("../../../lib/config");
 const logger_1 = require("../../../lib/logger");
-const openapi_error_1 = require("../errors/openapi.error");
+const openapi_error_1 = require("../../../errors/openapi-error");
 function getOpenApiOptions(app, apiDoc, di) {
     return {
         app,
@@ -46,7 +46,9 @@ function getOpenApiOptions(app, apiDoc, di) {
         exposeApiDocs: true,
         docsPath: '/api-docs',
         paths: getOpenApiResolversBasePath(),
-        pathsIgnore: /\.(spec|test)$/,
+        routesGlob: '**/*.[tj]s',
+        pathsIgnore: /\.((spec|test)\.[tj]s|d\.ts|js.map)$/,
+        routesIndexFileRegExp: /(?:index)?\.[tj]s$/,
         promiseMode: true,
         validateApiDoc: config_1.isNotProduction(),
     };
@@ -57,7 +59,7 @@ function getOpenApiResolversBasePath() {
 }
 exports.getOpenApiResolversBasePath = getOpenApiResolversBasePath;
 const errorTransformer = (openApiError, ajvError) => {
-    return new openapi_error_1.OpenapiError(openApiError, ajvError);
+    return new openapi_error_1.OpenApiError(openApiError, ajvError);
 };
 exports.errorTransformer = errorTransformer;
 var OpenApiTags;

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateResponses = void 0;
 const logger_1 = require("../../../lib/logger");
 const utils_1 = require("../../../lib/utils");
-const response_validation_error_1 = require("../errors/response-validation.error");
+const response_validation_error_1 = require("../../../errors/response-validation.error");
 const validateResponses = (req, res, next) => {
     const request = req;
     const response = res;

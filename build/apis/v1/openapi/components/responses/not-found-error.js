@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotFoundErrorResponse = void 0;
-const error_handler_pipeline_1 = require("../../../middlewares/error-handler-pipeline");
+const codes_1 = require("../../../../../errors/codes");
 exports.NotFoundErrorResponse = {
     description: 'Not Found Error',
     content: {
@@ -12,7 +12,7 @@ exports.NotFoundErrorResponse = {
                 properties: {
                     code: {
                         type: 'string',
-                        enum: error_handler_pipeline_1.errorCodes404,
+                        enum: codes_1.notFoundErrorCodes,
                     },
                 },
             },

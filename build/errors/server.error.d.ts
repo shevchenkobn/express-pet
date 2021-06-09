@@ -1,4 +1,4 @@
-import { DeepReadonly } from '../../../lib/types';
+import { DeepReadonly } from '../lib/types';
 import { ServerErrorCode } from './codes';
 import { LogicError } from './logic.error';
 export declare class ServerError extends LogicError {

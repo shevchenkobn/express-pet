@@ -10,8 +10,6 @@ import { DiamondRange } from '../../../models/diamond';
 import { DiamondsRepository } from '../../../repositories/diamonds.repository';
 import { DiamondCalculatorService } from '../../../services/diamond-calculator.service';
 import { SkipLimit } from '../../../services/mongodb-connection.service';
-import { ErrorCode } from '../errors/codes';
-import { EntityNotFoundError } from '../errors/entity-not-found.error';
 
 @injectable()
 export class DiamondsCommon {
@@ -37,11 +35,7 @@ export class DiamondsCommon {
     return this.diamonds.getSimilarDiamonds(diamondRange, skipLimit);
   }
 
-  async getAssessedDiamond(id: string) {
-    const diamond = await this.diamonds.getDiamond(id);
-    if (!diamond) {
-      throw new EntityNotFoundError(id, ErrorCode.AssessedDiamondNotFound);
-    }
-    return diamond;
+  getAssessedDiamond(id: string) {
+    return this.diamonds.getDiamond(id);
   }
 }

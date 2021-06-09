@@ -1,5 +1,5 @@
 import { OpenAPIRequestValidatorError } from 'openapi-request-validator';
-import { DeepReadonly } from '../../../lib/types';
+import { DeepReadonly } from '../lib/types';
 import * as Ajv from 'ajv';
 import { ErrorCode } from './codes';
 import { ILogicError } from './logic.error';
@@ -30,7 +30,7 @@ export function coerceLogicError(
   return error;
 }
 
-export class OpenapiError extends Error {
+export class OpenApiError extends Error {
   readonly openApiError: DeepReadonly<OpenAPIRequestValidatorError>;
   readonly jsonSchemaError: DeepReadonly<Ajv.ErrorObject>;
 

@@ -1,5 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { errorCodes404 } from '../../../middlewares/error-handler-pipeline';
+import { notFoundErrorCodes } from '../../../../../errors/codes';
 
 export const NotFoundErrorResponse: OpenAPIV3.ResponseObject = {
   description: 'Not Found Error',
@@ -11,7 +11,7 @@ export const NotFoundErrorResponse: OpenAPIV3.ResponseObject = {
         properties: {
           code: {
             type: 'string',
-            enum: errorCodes404,
+            enum: notFoundErrorCodes,
           },
         },
       },

@@ -1,7 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { isNotProduction } from '../../../../../lib/config';
-import { ErrorCode } from '../../../errors/codes';
-import { errorCodes500 } from '../../../middlewares/error-handler-pipeline';
+import { ErrorCode, serverErrorCodes } from '../../../../../errors/codes';
 
 export const ServerErrorResponse: OpenAPIV3.ResponseObject = {
   description: 'Server Error',
@@ -13,7 +12,7 @@ export const ServerErrorResponse: OpenAPIV3.ResponseObject = {
         properties: {
           code: {
             type: 'string',
-            enum: isNotProduction() ? errorCodes500 : [ErrorCode.Server],
+            enum: isNotProduction() ? serverErrorCodes : [ErrorCode.Server],
           },
           id: {},
         },

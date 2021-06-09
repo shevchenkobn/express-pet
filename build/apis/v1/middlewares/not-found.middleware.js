@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.notFoundHandler = void 0;
-const codes_1 = require("../errors/codes");
-const logic_error_1 = require("../errors/logic.error");
+const codes_1 = require("../../../errors/codes");
+const logic_error_1 = require("../../../errors/logic.error");
 const notFoundHandler = (req, res) => {
     res
         .status(404)

@@ -15,7 +15,7 @@ configure({
     file: {
       type: 'file',
       filename: appRootPath.resolve('logs/all.log'),
-      pattern: '.yyyy-MM-dd',
+      pattern: 'yyyy-MM-dd',
       daysToKeep: 7,
       backups: 7,
       keepFileExt: true,

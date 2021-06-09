@@ -28,6 +28,8 @@ const decimal_js_1 = __importDefault(require("decimal.js"));
 const inversify_1 = require("inversify");
 const mongodb_1 = require("mongodb");
 const types_1 = require("../di/types");
+const codes_1 = require("../errors/codes");
+const entity_not_found_error_1 = require("../errors/entity-not-found.error");
 const assessed_diamond_1 = require("../models/assessed-diamond");
 const mongodb_connection_service_1 = require("../services/mongodb-connection.service");
 exports.diamondsCollectionName = 'diamonds';
@@ -59,9 +61,12 @@ let DiamondsRepository = DiamondsRepository_1 = class DiamondsRepository {
             .findOne({
             _id: new mongodb_1.ObjectId(id),
         })
-            .then((document) => document
-            ? toAssessedDocument(document)
-            : null);
+            .then((document) => {
+            if (!document) {
+                throw new entity_not_found_error_1.EntityNotFoundError(id, codes_1.ErrorCode.AssessedDiamondNotFound);
+            }
+            return toAssessedDocument(document);
+        });
     }
     async getSimilarDiamonds(diamondRange, skipLimit) {
         const pagination = Object.assign({ skip: 0 }, skipLimit);

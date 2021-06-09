@@ -1,10 +1,10 @@
-import { ErrorCode } from './codes';
+import { ErrorCode, NotFoundErrorCode } from './codes';
 import { LogicError } from './logic.error';
 
 export class EntityNotFoundError<I = string> extends LogicError {
   constructor(
-    public readonly id: I,
-    code: ErrorCode = ErrorCode.NotFound,
+    public readonly entityId: I,
+    code: NotFoundErrorCode = ErrorCode.NotFound,
     message?: string,
     innerError?: any
   ) {

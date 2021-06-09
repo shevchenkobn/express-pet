@@ -15,3 +15,15 @@ export const validErrorCodes = Object.values(ErrorCode);
 export type ServerErrorCode =
   | ErrorCode.Server
   | ErrorCode.ServerOpenapiResponseValidation;
+export const serverErrorCodes = [
+  ErrorCode.Server,
+  ErrorCode.ServerOpenapiResponseValidation,
+];
+
+export type NotFoundErrorCode =
+  | ErrorCode.NotFound
+  | ErrorCode.AssessedDiamondNotFound;
+export const notFoundErrorCodes = [
+  ErrorCode.NotFound,
+  ErrorCode.AssessedDiamondNotFound,
+];

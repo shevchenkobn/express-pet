@@ -8,3 +8,6 @@ export declare enum ErrorCode {
 }
 export declare const validErrorCodes: ErrorCode[];
 export declare type ServerErrorCode = ErrorCode.Server | ErrorCode.ServerOpenapiResponseValidation;
+export declare const serverErrorCodes: ErrorCode[];
+export declare type NotFoundErrorCode = ErrorCode.NotFound | ErrorCode.AssessedDiamondNotFound;
+export declare const notFoundErrorCodes: ErrorCode[];

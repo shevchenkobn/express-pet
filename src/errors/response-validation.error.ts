@@ -1,5 +1,5 @@
 import { OpenAPIResponseValidatorValidationError } from 'openapi-response-validator';
-import { DeepReadonly } from '../../../lib/types';
+import { DeepReadonly } from '../lib/types';
 import { ErrorCode } from './codes';
 import { ServerError } from './server.error';
 
@@ -14,10 +14,6 @@ export class ResponseValidationError extends ServerError {
     >,
     message?: string
   ) {
-    super(
-      ErrorCode.ServerOpenapiResponseValidation,
-      validationError,
-      message
-    );
+    super(ErrorCode.ServerOpenapiResponseValidation, validationError, message);
   }
 }

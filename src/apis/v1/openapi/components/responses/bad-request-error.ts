@@ -1,9 +1,9 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { validErrorCodes } from '../../../errors/codes';
 import {
-  errorCodes404,
-  errorCodes500,
-} from '../../../middlewares/error-handler-pipeline';
+  notFoundErrorCodes,
+  serverErrorCodes,
+  validErrorCodes,
+} from '../../../../../errors/codes';
 
 export const NotFoundErrorResponse: OpenAPIV3.ResponseObject = {
   description: 'Not Found Error',
@@ -16,7 +16,7 @@ export const NotFoundErrorResponse: OpenAPIV3.ResponseObject = {
           code: {
             type: 'string',
             enum: validErrorCodes.filter(
-              (v) => !errorCodes404.includes(v) && !errorCodes500.includes(v)
+              (v) => !notFoundErrorCodes.includes(v) && !serverErrorCodes.includes(v)
             ),
           },
         },

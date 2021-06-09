@@ -20,7 +20,7 @@ log4js_1.configure({
         file: {
             type: 'file',
             filename: app_root_path_1.default.resolve('logs/all.log'),
-            pattern: '.yyyy-MM-dd',
+            pattern: 'yyyy-MM-dd',
             daysToKeep: 7,
             backups: 7,
             keepFileExt: true,

@@ -4,9 +4,9 @@ exports.EntityNotFoundError = void 0;
 const codes_1 = require("./codes");
 const logic_error_1 = require("./logic.error");
 class EntityNotFoundError extends logic_error_1.LogicError {
-    constructor(id, code = codes_1.ErrorCode.NotFound, message, innerError) {
+    constructor(entityId, code = codes_1.ErrorCode.NotFound, message, innerError) {
         super(code, message, innerError);
-        this.id = id;
+        this.entityId = entityId;
     }
 }
 exports.EntityNotFoundError = EntityNotFoundError;

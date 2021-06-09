@@ -36,6 +36,7 @@
     "mime": "^1.4.1",
     "mongodb": "^3.6.9",
     "reflect-metadata": "^0.1.13",
+    "serialize-error": "^8.1.0",
     "swagger-ui-express": "^4.1.6",
     "tslib": "^1.14.1"
   },

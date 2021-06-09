@@ -6,6 +6,9 @@ export declare type Maybe<T> = T | null | undefined;
 export declare type Nullable<T> = T | null;
 export declare type Optional<T> = T | undefined;
 export declare type NonOptional<T> = T extends undefined ? never : T;
+export declare type AsInterface<C> = {
+    [K in keyof C]: C[K];
+};
 export declare const asReadonly: unique symbol;
 export interface ReadonlyMarker<RT> {
     [asReadonly]: RT;

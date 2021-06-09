@@ -7,7 +7,7 @@ import { OpenAPIV3 } from 'openapi-types';
 import * as path from 'path';
 import { isNotProduction } from '../../../lib/config';
 import { logger } from '../../../lib/logger';
-import { OpenapiError } from '../errors/openapi.error';
+import { OpenApiError } from '../../../errors/openapi-error';
 
 export interface OpenApiPathItemHandler {
   parameters?: OpenAPIV3.ParameterObject[];
@@ -44,7 +44,9 @@ export function getOpenApiOptions(
     exposeApiDocs: true,
     docsPath: '/api-docs',
     paths: getOpenApiResolversBasePath(),
-    pathsIgnore: /\.(spec|test)$/,
+    routesGlob: '**/*.[tj]s',
+    pathsIgnore: /\.((spec|test)\.[tj]s|d\.ts|js.map)$/,
+    routesIndexFileRegExp: /(?:index)?\.[tj]s$/,
     promiseMode: true,
     validateApiDoc: isNotProduction(),
   };
@@ -54,10 +56,10 @@ export function getOpenApiResolversBasePath() {
   return path.join(__dirname, '../resolvers/');
 }
 
-// FIXME: check, why ErrorObject is missing dataPath in this case
 export const errorTransformer: OpenAPIRequestValidatorArgs['errorTransformer'] =
   (openApiError, ajvError) => {
-    return new OpenapiError(openApiError, ajvError as any);
+    // ajvError ErrorObject is missing dataPath in this case
+    return new OpenApiError(openApiError, ajvError as any);
   };
 
 export enum OpenApiTags {

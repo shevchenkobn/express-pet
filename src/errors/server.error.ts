@@ -1,4 +1,4 @@
-import { DeepReadonly } from '../../../lib/types';
+import { DeepReadonly } from '../lib/types';
 import { ServerErrorCode } from './codes';
 import { LogicError } from './logic.error';
 
@@ -10,15 +10,7 @@ export class ServerError extends LogicError {
     innerError?: DeepReadonly<any>,
     message?: string
   ) {
-    super(code);
+    super(code, message);
     this.innerError = innerError;
-    if (message) {
-      Object.defineProperty(this, 'message', {
-        enumerable: true,
-        configurable: false,
-        writable: false,
-        value: message,
-      });
-    }
   }
 }
