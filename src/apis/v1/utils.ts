@@ -1,8 +1,8 @@
 import * as path from 'path';
 import { unescape } from 'querystring';
 
-export function fromQueryParam<T = any>(param: string): T {
-  return JSON.parse(unescape(param));
+export function fromQueryParam<T = any>(param: unknown): T {
+  return typeof param === 'string' ? JSON.parse(unescape(param)) : param;
 }
 
 export function getParamNameFromScriptName(fileName: string) {

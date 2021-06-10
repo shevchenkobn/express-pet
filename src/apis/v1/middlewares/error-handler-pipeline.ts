@@ -32,7 +32,11 @@ export const errorHandlingPipeline: ErrorRequestHandler[] = [
       if (err instanceof SyntaxError && err.message.includes('JSON')) {
         res
           .status(400)
-          .json(new LogicError(ErrorCode.JsonBad, err.message, err));
+          .json(
+            new LogicError(ErrorCode.JsonBad, err.message, err).asJsonObject(
+              isNotProduction()
+            )
+          );
       } else if (isOpenApiFinalError(err)) {
         const error = coerceLogicError(err);
         res.status(err.status).json(error);

@@ -14,6 +14,7 @@ export const ErrorResponse: OpenAPIV3.ResponseObject = {
             enum: validErrorCodes,
           },
         },
+        additionalProperties: true,
       },
     },
   },

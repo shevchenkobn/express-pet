@@ -17,6 +17,7 @@ export const DiamondRangeSchema: OpenAPIV3.SchemaObject = {
             max: NonNegativeDecimalSchema,
           },
           minProperties: 1,
+          additionalProperties: false,
         },
       ],
     },
@@ -25,4 +26,5 @@ export const DiamondRangeSchema: OpenAPIV3.SchemaObject = {
     clarity: DiamondClaritySchema,
   },
   minProperties: 1,
+  additionalProperties: false,
 };

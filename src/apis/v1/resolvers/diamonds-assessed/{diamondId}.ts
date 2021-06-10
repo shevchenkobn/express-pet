@@ -1,8 +1,10 @@
 import { Container } from 'inversify';
 import { ApiV1Types } from '../../di/api-v1.types';
 import { OpenApiPathItemHandler, OpenApiTags } from '../../openapi';
-import { ErrorResponse } from '../../openapi/components/responses/error';
+import { BadRequestErrorResponse } from '../../openapi/components/responses/bad-request-error';
+import { NotFoundErrorResponse } from '../../openapi/components/responses/not-found-error';
 import { ServerErrorResponse } from '../../openapi/components/responses/server-error';
+import { AssessedDiamondSchema } from '../../openapi/components/schemas/assessed-diamonds';
 import { ObjectIdSchema } from '../../openapi/components/schemas/object-id';
 import { DiamondsCommon } from '../../services/diamonds.common';
 import { getParamNameFromScriptName } from '../../utils';
@@ -39,13 +41,12 @@ export default function (di: Container) {
         description: 'Assessed Diamond',
         content: {
           'application/json': {
-            schema: {
-              type: 'object',
-            },
+            schema: AssessedDiamondSchema,
           },
         },
       },
-      404: ErrorResponse,
+      400: BadRequestErrorResponse,
+      404: NotFoundErrorResponse,
       500: ServerErrorResponse,
     },
   };

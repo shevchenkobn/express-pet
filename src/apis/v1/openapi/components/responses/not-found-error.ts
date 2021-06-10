@@ -13,7 +13,11 @@ export const NotFoundErrorResponse: OpenAPIV3.ResponseObject = {
             type: 'string',
             enum: notFoundErrorCodes,
           },
+          entityId: {
+            description: 'Not Found Entity ID if some entity was requested',
+          },
         },
+        additionalProperties: true,
       },
     },
   },

@@ -1,10 +1,12 @@
 import { Container } from 'inversify';
+import { OpenAPI, OpenAPIV3 } from 'openapi-types';
 import { fromLooseNonAssessedDiamond } from '../../../models/assessed-diamond';
 import { DiamondRange } from '../../../models/diamond';
 import { SkipLimit } from '../../../services/mongodb-connection.service';
 import { ApiV1Types } from '../di/api-v1.types';
 import { OpenApiPathItemHandler, OpenApiTags } from '../openapi';
 import { SkipLimitParameter } from '../openapi/components/parameters/skip-limit';
+import { BadRequestErrorResponse } from '../openapi/components/responses/bad-request-error';
 import { ServerErrorResponse } from '../openapi/components/responses/server-error';
 import { AssessedDiamondSchema } from '../openapi/components/schemas/assessed-diamonds';
 import { DiamondRangeSchema } from '../openapi/components/schemas/diamond-range';
@@ -58,6 +60,7 @@ export default function (di: Container) {
           },
         },
       },
+      400: BadRequestErrorResponse,
       500: ServerErrorResponse,
     },
   };
@@ -79,13 +82,17 @@ export default function (di: Container) {
       {
         name: 'filter',
         in: 'query',
-        description: 'Parameters for query',
+        description:
+          'Parameters for query. **JSON format is used, style is used to make validator work**',
         required: true,
         content: {
           'application/json': {
             schema: DiamondRangeSchema,
           },
         },
+        schema: DiamondRangeSchema,
+        style: 'form',
+        explode: true,
       },
       SkipLimitParameter,
     ],
@@ -111,9 +118,10 @@ export default function (di: Container) {
           },
         },
       },
+      400: BadRequestErrorResponse,
       500: ServerErrorResponse,
     },
-  };
+  } as OpenAPIV3.OperationObject;
 
   return pathItemHandler;
 }

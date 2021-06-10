@@ -5,8 +5,8 @@ import {
   validErrorCodes,
 } from '../../../../../errors/codes';
 
-export const NotFoundErrorResponse: OpenAPIV3.ResponseObject = {
-  description: 'Not Found Error',
+export const BadRequestErrorResponse: OpenAPIV3.ResponseObject = {
+  description: 'Bad Request Error',
   content: {
     'application/json': {
       schema: {
@@ -16,10 +16,12 @@ export const NotFoundErrorResponse: OpenAPIV3.ResponseObject = {
           code: {
             type: 'string',
             enum: validErrorCodes.filter(
-              (v) => !notFoundErrorCodes.includes(v) && !serverErrorCodes.includes(v)
+              (v) =>
+                !notFoundErrorCodes.includes(v) && !serverErrorCodes.includes(v)
             ),
           },
         },
+        additionalProperties: true,
       },
     },
   },
