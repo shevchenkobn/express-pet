@@ -83,7 +83,7 @@ export default function (di: Container) {
         name: 'filter',
         in: 'query',
         description:
-          'Parameters for query. **JSON format is used, style is used to make validator work**',
+          'Parameters for query.\n**JSON format is used by `content` property; `schema`, `style` & `explode` properties can be removed**',
         required: true,
         content: {
           'application/json': {

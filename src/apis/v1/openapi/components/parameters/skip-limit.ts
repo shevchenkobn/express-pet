@@ -20,7 +20,7 @@ export const SkipLimitParameter: OpenAPIV3.ParameterObject = {
   name: 'skipLimit',
   in: 'query',
   description:
-    'Skip & limit parameters. JSON format is used, style is used to make validator work',
+    'Skip & limit parameters.\n**JSON format is used by `content` property; `schema`, `style` & `explode` properties can be removed**',
   required: true,
   content: {
     'application/json': {

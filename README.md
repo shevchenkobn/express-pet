@@ -71,6 +71,9 @@ The points are outlined top-to-down, from general to specifics.
     Some services need a to clear all the resources (similar to `Dispose()` from .NET). To do that a special interface & helper class are created. All services are disposed of when container is disposed of (see *src/lib/object-lifecycle.ts*).
     
     All containers are disposed of when OS signal is received or a fatal error happened & the process is shutting down.
+  - Unified error handling. All errors, sent to user, are subtypes of `{ code: string; }` (e.g. `{ "code": "notFound" }`).
+
+    Unified errors are implemented, using OOP hierarchy of classes (see `src/errors`).
   - Resource management - all things that need to be shared are mostly shared using DI container (for common services see *src/services*, *src/repositories*). It includes MongoDB connection and some business logic.
   - Code sharing - the most common code is combined in files & directories. For most of it refer to *src/lib*.
 - REST API implementation is located at *src/apis/v1*. It even has a separate DI, based on parent DI (see *src/apis/v1/di*).
@@ -89,11 +92,9 @@ The points are outlined top-to-down, from general to specifics.
   - Request validation, according to OpenAPI docs (see *src/apis/v1/app*, *src/apis/v1/openapi/index*, and `apiDoc` from files in *src/apis/v1/resolvers*).
   - Optional response validation for debugging purposes (see *src/apis/v1/middlewares/validate-responses.middleware.ts*).
   - OpenAPI documentation generation (see *src/apis/v1/app*, *src/apis/v1/openapi/index*, and `apiDoc` from files in *src/apis/v1/resolvers*).
-  - Unified error handling. All errors, sent to user, are subtypes of `{ code: string; }` (e.g. `{ "code": "notFound" }`).
-    
+  - Unified errors from infrastructure part, enhanced by OpenAPI.
+
     Depending on code, some additional properties might be present. For example, for OpenAPI errors they are `ajv` errors and similar, telling, what exactly is wrong (see *src/apis/v1/openapi/index*, *src/apis/v1/middlewares*).
-    
-    Unified errors are implemented, using OOP hierarchy of classes (see `src/apis/v1/errors`).
 - Routing in `express-openapi` is peculiar. It interprets directory tree at a particular point as REST API URL endpoint tree.
   
   In the project such URL is *src/apis/v1/resolvers*. It contains file *src/apis/v1/resolvers/diamonds-assessed.ts*, which contains `Express.Handler = (req, res, next) => void` for HTTP methods. 
@@ -111,3 +112,4 @@ The points are outlined top-to-down, from general to specifics.
 
 ## FIXME:
 - Maybe, `eslint` requires some tweaking.
+- The `express-openapi` library doesn't support `content`, `style` & `explode` in parameters definitions, so a hacky workaround is used. 
